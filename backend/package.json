@@ -2,12 +2,17 @@
   "name": "chat-backend",
   "version": "1.0.0",
   "description": "Chat application backend",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "type": "module",
+  "imports": {
+    "#database": "./src/database/index.js",
+    "#socket": "./src/socket/index.js",
+    "#routes": "./src/routes/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
     "format": "prettier --write .",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
