@@ -1,3 +1,4 @@
+import { initMessageModel } from '../modules/messages/message.model.js';
 import { initUserModel } from '../modules/users/user.model.js';
 import { sequelize } from './sequelize.js';
 
@@ -9,6 +10,7 @@ export async function initDatabase() {
     console.log('DB connected');
 
     models.User = initUserModel(sequelize);
+    models.Message = initMessageModel(sequelize);
 
     if (process.env.NODE_ENV !== 'production') {
       await sequelize.sync({ alter: true });
