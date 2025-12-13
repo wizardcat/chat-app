@@ -13,11 +13,15 @@ export const initUserModel = sequelize => {
         type: DataTypes.STRING(30),
         allowNull: false,
       },
+      avatarUrl: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
       socketId: {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
-      lastSeen: {
+      lastSeenAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
       },
