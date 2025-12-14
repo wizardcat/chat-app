@@ -1,5 +1,6 @@
 import { models } from '#database';
 import { Server } from 'socket.io';
+import { SOCKET_EVENTS } from '../constants/socket-events.constants.js';
 import { MessageService } from '../modules/messages/message.service.js';
 import { UserService } from '../modules/users/user.service.js';
 
@@ -18,16 +19,16 @@ export const initializeSocketIO = httpServer => {
     },
   });
 
-  io.on('connection', socket => {
+  io.on(SOCKET_EVENTS.CONNECTION, socket => {
     console.log('User connected:', socket.id);
 
-    socket.on('disconnect', async () => {
+    socket.on(SOCKET_EVENTS.DISCONNECT, async () => {
       try {
         await userService.deleteUserBySocketId(socket.id);
 
         const onlineCount = await userService.getOnlineUsersCount();
 
-        io.emit('users:count', onlineCount);
+        io.emit(SOCKET_EVENTS.USERS.COUNT, onlineCount);
 
         console.log('User disconnected:', socket.id);
       } catch (error) {
@@ -35,7 +36,7 @@ export const initializeSocketIO = httpServer => {
       }
     });
 
-    socket.on('user:join', async nickname => {
+    socket.on(SOCKET_EVENTS.USERS.JOIN, async nickname => {
       try {
         await userService.createUser(nickname, socket.id);
 
@@ -43,11 +44,11 @@ export const initializeSocketIO = httpServer => {
 
         const recentMessages = await messageService.getLastMessages();
 
-        socket.emit('messages:history', recentMessages);
+        socket.emit(SOCKET_EVENTS.MESSAGES.HISTORY, recentMessages);
 
         const onlineCount = await userService.getOnlineUsersCount();
-        
-        io.emit('users:count', onlineCount);
+
+        io.emit(SOCKET_EVENTS.USERS.COUNT, onlineCount);
 
         console.log(`${nickname} joined the chat`);
       } catch (error) {
@@ -55,13 +56,13 @@ export const initializeSocketIO = httpServer => {
       }
     });
 
-    socket.on('message:send', async data => {
+    socket.on(SOCKET_EVENTS.MESSAGES.SEND, async data => {
       try {
         const { nickname, message } = data;
 
         const newMessage = await messageService.createMessage(nickname, message);
 
-        io.emit('message:new', newMessage);
+        io.emit(SOCKET_EVENTS.MESSAGES.NEW, newMessage);
 
         console.log(`${nickname}: ${message}`);
       } catch (error) {
