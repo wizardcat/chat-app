@@ -32,7 +32,9 @@ export const MessageItem = React.memo(({ message, isOwn }: MessageItemProps) => 
               borderRadius: 2,
             }}
           >
-            <Typography variant="body1">{message.message}</Typography>
+            <Typography variant="body1" sx={{ wordBreak: 'break-word' }}>
+              {message.message}
+            </Typography>
           </Paper>
         </Box>
 
