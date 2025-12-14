@@ -16,7 +16,7 @@ export const MessageItem = React.memo(({ message, isOwn }: MessageItemProps) => 
 
         <Box>
           <Box display="flex" alignItems="center" mb={0.5}>
-            <Typography variant="caption" fontWeight="bold" mr={1}>
+            <Typography variant="caption" color="text.secondary" fontWeight="bold" mr={1}>
               {message.nickname}
             </Typography>
             <Typography variant="caption" color="text.secondary">
