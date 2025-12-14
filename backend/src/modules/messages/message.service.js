@@ -13,7 +13,7 @@ export class MessageService {
 
   async getLastMessages() {
     return await this.messageModel.findAll({
-      order: [['timestamp', 'ASC']],
+      order: [['timestamp', 'DESC']],
       limit: 10,
     });
   }

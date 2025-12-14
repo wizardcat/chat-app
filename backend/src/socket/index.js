@@ -44,7 +44,7 @@ export const initializeSocketIO = httpServer => {
 
         const recentMessages = await messageService.getLastMessages();
 
-        socket.emit(SOCKET_EVENTS.MESSAGES.HISTORY, recentMessages);
+        socket.emit(SOCKET_EVENTS.MESSAGES.HISTORY, recentMessages.reverse());
 
         const onlineCount = await userService.getOnlineUsersCount();
 
