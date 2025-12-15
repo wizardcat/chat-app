@@ -1,7 +1,10 @@
 'use client';
+
+import { useChatSession } from '@/hooks/use-chat-session.hook';
 import { useSocket } from '@/hooks/use-socket.hook';
 import { Box } from '@mui/material';
 import { useCallback, useState } from 'react';
+
 import { ChatHeader } from '../ChatHeader/chat-header.component';
 import { LoginScreen } from '../LoginScreen/login-screen.component';
 import { MessageInput } from '../MessageInput/message-input.component';
@@ -14,39 +17,30 @@ const boxStyles = {
 };
 
 export const ChatApp = () => {
-  const [nickname, setNickname] = useState('');
   const [newMessage, setNewMessage] = useState('');
 
-  const isLoggedIn = Boolean(nickname.trim());
+  const { nickname, isLoggedIn, login, logout } = useChatSession();
 
   const { isConnected, isLoading, messages, onlineUsers, sendMessage, disconnect } = useSocket(
     nickname,
     isLoggedIn,
   );
 
-  const handleLogin = useCallback((nickname: string) => {
-    const trimmedNickname = nickname.trim();
-
-    if (trimmedNickname) {
-      setNickname(trimmedNickname);
-    }
-  }, []);
-
   const handleSendMessage = useCallback(() => {
-    if (newMessage.trim() && isConnected) {
-      sendMessage(newMessage);
-      setNewMessage('');
-    }
+    if (!newMessage.trim() || !isConnected) return;
+
+    sendMessage(newMessage);
+    setNewMessage('');
   }, [newMessage, isConnected, sendMessage]);
 
   const handleLogout = useCallback(() => {
     disconnect();
-    setNickname('');
+    logout();
     setNewMessage('');
-  }, [disconnect]);
+  }, [disconnect, logout]);
 
   if (!isLoggedIn) {
-    return <LoginScreen onLogin={handleLogin} />;
+    return <LoginScreen onLogin={login} />;
   }
 
   return (
