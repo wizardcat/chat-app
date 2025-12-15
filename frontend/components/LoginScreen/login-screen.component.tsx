@@ -62,7 +62,7 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
             </Avatar>
 
             <Typography variant="h5" fontWeight={600}>
-              Welcome to ChatRoom
+              Welcome to the chat!
             </Typography>
 
             <Typography variant="body2" color="text.secondary" mt={1}>
