@@ -3,6 +3,7 @@ import { initializeSocketIO } from '#socket';
 import dotenv from 'dotenv';
 import http from 'http';
 import app from './app.js';
+import { logger } from './utils/logger.js';
 
 dotenv.config();
 
@@ -17,19 +18,19 @@ const start = async () => {
     initializeSocketIO(server);
 
     const shutdown = async () => {
-      console.log('\n Received termination signal. Closing HTTP server and DB connections...');
+      logger.info('Received termination signal. Closing HTTP server and DB connections...');
 
       server.close(async () => {
-        console.log('HTTP/Socket.IO server closed.');
+        logger.info('HTTP/Socket.IO server closed.');
 
         await closeDatabase();
 
-        console.log('Application cleanup complete. Exiting process.');
+        logger.info('Application cleanup complete. Exiting process.');
         process.exit(0);
       });
 
       setTimeout(() => {
-        console.error('Forcing shutdown after timeout.');
+        logger.error('Forcing shutdown after timeout.');
         process.exit(1);
       }, 10000).unref();
     };
@@ -38,10 +39,10 @@ const start = async () => {
     process.on('SIGINT', shutdown);
 
     server.listen(PORT, () => {
-      console.log(`Server is running on http://localhost:${PORT}`);
+      logger.info(`Server is running on http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error('Error during server startup:', error);
+    logger.error({ err: error }, 'Error during server startup');
     process.exit(1);
   }
 };

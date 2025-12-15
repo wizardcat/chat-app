@@ -1,5 +1,6 @@
 import { initMessageModel } from '../modules/messages/message.model.js';
 import { initUserModel } from '../modules/users/user.model.js';
+import { logger } from '../utils/logger.js';
 import { sequelize } from './sequelize.js';
 
 export const models = {};
@@ -7,7 +8,7 @@ export const models = {};
 export async function initDatabase() {
   try {
     await sequelize.authenticate();
-    console.log('DB connected');
+    logger.info('DB connected');
 
     models.User = initUserModel(sequelize);
     models.Message = initMessageModel(sequelize);
@@ -16,9 +17,9 @@ export async function initDatabase() {
       await sequelize.sync({ alter: true });
     }
 
-    console.log('Models synchronized');
+    logger.info('Models synchronized');
   } catch (error) {
-    console.error('DB init failed:', error);
+    logger.error('DB init failed:', error);
     throw error;
   }
 }
@@ -26,8 +27,8 @@ export async function initDatabase() {
 export async function closeDatabase() {
   try {
     await sequelize.close();
-    console.log('Sequelize: Connection closed.');
+    logger.info('Sequelize: Connection closed.');
   } catch (error) {
-    console.error('Sequelize: Error closing connection:', error);
+    logger.error('Sequelize: Error closing connection:', error);
   }
 }
