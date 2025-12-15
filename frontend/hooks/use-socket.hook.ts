@@ -30,15 +30,7 @@ export const useSocket = (nickname: string, isLoggedIn: boolean) => {
   );
 
   useEffect(() => {
-    if (!isLoggedIn || !nickname) {
-      return () => {
-        if (socketRef.current) {
-          socketRef.current.disconnect();
-          socketRef.current = null;
-          setIsConnected(false);
-        }
-      };
-    }
+    if (!isLoggedIn || !nickname) return;
 
     const socket = io(SOCKET_URL);
     socketRef.current = socket;
