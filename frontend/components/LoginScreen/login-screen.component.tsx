@@ -8,19 +8,34 @@ const rootBoxStyles = {
   minHeight: '100vh',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
-  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  bgcolor: 'background.default',
 };
 
 const avatarStyles = {
-  width: 80,
-  height: 80,
+  width: 72,
+  height: 72,
   mx: 'auto',
   mb: 2,
   bgcolor: 'primary.main',
 };
 
-const paperStyles = { p: 4, borderRadius: 4 };
+const paperStyles = {
+  p: 4,
+  borderRadius: 3,
+};
+
+const buttonStyles = {
+  textTransform: 'none',
+  fontWeight: 600,
+  py: 1.2,
+};
+
+const textFieldStyles = {
+  mb: 3,
+  '& .MuiOutlinedInput-root': {
+    borderRadius: 2,
+  },
+};
 
 export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
   const [nickname, setNickname] = useState('');
@@ -45,34 +60,37 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
             <Avatar sx={avatarStyles}>
               <PeopleIcon sx={{ fontSize: 40 }} />
             </Avatar>
-            <Typography variant="h4" fontWeight="bold" gutterBottom>
+
+            <Typography variant="h5" fontWeight={600}>
               Welcome to ChatRoom
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+
+            <Typography variant="body2" color="text.secondary" mt={1}>
               Enter your nickname to join the conversation
             </Typography>
           </Box>
 
           <TextField
             fullWidth
-            label="Nickname"
-            variant="outlined"
+            placeholder="Your nickname"
             value={nickname}
             onChange={handleNicknameChange}
             onKeyUp={handleNicknameKeyUp}
             slotProps={{
-              input: { inputProps: { maxLength: MAX_NICKNAME_LENGTH } },
+              input: {
+                inputProps: { maxLength: MAX_NICKNAME_LENGTH },
+              },
             }}
-            sx={{ mb: 3 }}
-            autoFocus
+            sx={textFieldStyles}
           />
 
           <Button
             fullWidth
-            variant="contained"
             size="large"
+            variant="contained"
+            disabled={!nickname.trim()}
             onClick={handleLoginClick}
-            disabled={!nickname}
+            sx={buttonStyles}
           >
             Join Chat Room
           </Button>
