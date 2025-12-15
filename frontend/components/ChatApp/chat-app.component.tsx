@@ -41,10 +41,9 @@ export const ChatApp = () => {
 
   const handleLogout = useCallback(() => {
     disconnect();
-    if (!isConnected) return;
     setNickname('');
     setNewMessage('');
-  }, [isConnected, disconnect]);
+  }, [disconnect]);
 
   if (!isLoggedIn) {
     return <LoginScreen onLogin={handleLogin} />;
