@@ -7,10 +7,6 @@ export class MessageService {
     return await this.messageModel.create({ nickname, message });
   }
 
-  async getMessagesByUserId(userId) {
-    return await this.messageModel.findAll({ where: { userId } });
-  }
-
   async getLastMessages() {
     return await this.messageModel.findAll({
       order: [['timestamp', 'DESC']],
