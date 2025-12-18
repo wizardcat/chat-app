@@ -4,6 +4,7 @@ import { SOCKET_EVENTS } from '../constants/socket-events.constants.js';
 import { MessageService } from '../modules/messages/message.service.js';
 import { UserService } from '../modules/users/user.service.js';
 import { logger } from '../utils/logger.js';
+import { joinSchema, sendMessageSchema } from '../validation/socket.schemas.js';
 
 export const initializeSocketIO = httpServer => {
   if (!models.User) {
@@ -26,7 +27,9 @@ export const initializeSocketIO = httpServer => {
     socket.on(SOCKET_EVENTS.DISCONNECT, async () => {
       try {
         await userService.deleteUserBySocketId(socket.id);
+        
         const onlineCount = await userService.getOnlineUsersCount();
+        
         io.emit(SOCKET_EVENTS.USERS.COUNT, onlineCount);
 
         logger.info('User disconnected', { socketId: socket.id });
@@ -35,12 +38,21 @@ export const initializeSocketIO = httpServer => {
       }
     });
 
-    socket.on(SOCKET_EVENTS.USERS.JOIN, async nickname => {
+    socket.on(SOCKET_EVENTS.USERS.JOIN, async payload => {
+      const parsed = joinSchema.safeParse(payload);
+      
+      if (!parsed.success) {
+        socket.emit('error', { message: 'Invalid nickname' });
+        return;
+      }
+
+      const nickname = parsed.data;
+
       try {
         await userService.createUser(nickname, socket.id);
-        socket.nickname = nickname;
+        socket.data.nickname = nickname;
 
-        const recentMessages = await messageService.getLastMessages();
+        const recentMessages = await messageService.getRecentMessages();
         socket.emit(SOCKET_EVENTS.MESSAGES.HISTORY, recentMessages.reverse());
 
         const onlineCount = await userService.getOnlineUsersCount();
@@ -52,9 +64,22 @@ export const initializeSocketIO = httpServer => {
       }
     });
 
-    socket.on(SOCKET_EVENTS.MESSAGES.SEND, async ({ nickname, message }) => {
+    socket.on(SOCKET_EVENTS.MESSAGES.SEND, async payload => {
+      const parsed = sendMessageSchema.safeParse(payload);
+      if (!parsed.success) {
+        socket.emit('error', { message: 'Invalid message' });
+        return;
+      }
+
+      if (!socket.data.nickname) {
+        socket.emit('error', { message: 'Unauthorized' });
+        return;
+      }
+
       try {
-        const newMessage = await messageService.createMessage(nickname, message);
+        const nickname = socket.data.nickname;
+        const newMessage = await messageService.createMessage(nickname, parsed.data.message);
+
         io.emit(SOCKET_EVENTS.MESSAGES.NEW, newMessage);
 
         logger.debug('Message sent', { nickname });
