@@ -11,28 +11,29 @@ export const useSocket = (nickname: string, isLoggedIn: boolean) => {
   const socketRef = useRef<Socket | null>(null);
 
   const disconnect = useCallback(() => {
-    if (socketRef.current) {
-      socketRef.current.disconnect();
-      socketRef.current = null;
-    }
+    socketRef.current?.disconnect();
+    socketRef.current = null;
   }, []);
 
   const sendMessage = useCallback(
     (message: string) => {
-      if (!socketRef.current || !isConnected) return;
+      const trimmedMesage = message.trim();
+      if (!trimmedMesage || !socketRef.current || !isConnected) return;
 
       socketRef.current.emit(SOCKET_EVENTS.MESSAGES.SEND, {
-        nickname,
-        message: message.trim(),
+        message: trimmedMesage,
       });
     },
-    [isConnected, nickname],
+    [isConnected],
   );
 
   useEffect(() => {
     if (!isLoggedIn || !nickname) return;
 
-    const socket = io(SOCKET_URL);
+    const socket = io(SOCKET_URL, {
+      transports: ['websocket'],
+    });
+
     socketRef.current = socket;
 
     socket.on(SOCKET_EVENTS.CONNECT, () => {
@@ -56,12 +57,15 @@ export const useSocket = (nickname: string, isLoggedIn: boolean) => {
       setOnlineUsers(count);
     });
 
+    socket.on('error', (err) => {
+      console.error('Socket error:', err.message);
+    });
+
     return () => {
       socket.disconnect();
       socketRef.current = null;
-      setIsConnected(false);
     };
-  }, [isLoggedIn, nickname, disconnect]);
+  }, [isLoggedIn, nickname]);
 
   return {
     isConnected,

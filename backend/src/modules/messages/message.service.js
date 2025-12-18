@@ -7,7 +7,7 @@ export class MessageService {
     return await this.messageModel.create({ nickname, message });
   }
 
-  async getLastMessages() {
+  async getRecentMessages() {
     return await this.messageModel.findAll({
       order: [['timestamp', 'DESC']],
       limit: 10,
