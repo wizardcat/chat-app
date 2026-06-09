@@ -18,8 +18,8 @@ const boxStyles = {
 
 export const ChatApp = () => {
   const [newMessage, setNewMessage] = useState('');
-
-  const { nickname, isLoggedIn, login, logout } = useChatSession();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { nickname, login, logout } = useChatSession(setIsLoggedIn);
 
   const { isConnected, isLoading, messages, onlineUsers, sendMessage, disconnect } = useSocket(
     nickname,

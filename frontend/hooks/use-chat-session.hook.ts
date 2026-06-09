@@ -1,9 +1,7 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-export function useChatSession() {
+export function useChatSession(setIsLoggedIn: (value: boolean) => void) {
   const [nickname, setNickname] = useState('');
-
-  const isLoggedIn = Boolean(nickname.trim());
 
   const login = useCallback((name: string) => {
     const trimmed = name.trim();
@@ -16,9 +14,12 @@ export function useChatSession() {
     setNickname('');
   }, []);
 
+  useEffect(() => {
+    setIsLoggedIn(Boolean(nickname.trim()));
+  }, [nickname, setIsLoggedIn]);
+
   return {
     nickname,
-    isLoggedIn,
     login,
     logout,
   };
