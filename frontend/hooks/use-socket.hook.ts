@@ -2,9 +2,10 @@ import { SOCKET_URL } from '@/config/api.config';
 import { SOCKET_EVENTS } from '@/constants/socket-events.constants';
 import { Message } from '@/types';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toast';
 import { io, Socket } from 'socket.io-client';
 
-export const useSocket = (nickname: string, isLoggedIn: boolean) => {
+export const useSocket = (nickname: string, isLoggedIn: boolean,) => {
   const [isConnected, setIsConnected] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [onlineUsers, setOnlineUsers] = useState(0);
@@ -58,7 +59,8 @@ export const useSocket = (nickname: string, isLoggedIn: boolean) => {
     });
 
     socket.on('error', (err) => {
-      console.error('Socket error:', err.message);
+      // setIsConnected(false);
+      toast.error(`Socket error: ${err.message}`);
     });
 
     return () => {
