@@ -1,6 +1,12 @@
 import SendIcon from '@mui/icons-material/Send';
 import { Box, IconButton, InputBase, Paper } from '@mui/material';
-import { MessageInputProps } from './message-input.props';
+
+export interface MessageInputProps {
+  value: string;
+  onChange: (value: string) => void;
+  onSend: () => void;
+  disabled: boolean;
+}
 
 export const MessageInput = ({ value, onChange, onSend, disabled }: MessageInputProps) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

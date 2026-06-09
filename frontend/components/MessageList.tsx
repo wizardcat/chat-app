@@ -1,8 +1,14 @@
-import { useAutoScroll } from '@/hooks/use-auto-scroll.hook';
+import { useAutoScroll } from '@/hooks/useAutoScroll';
+import { Message } from '@/types';
 import { Box, CircularProgress, Container, Typography } from '@mui/material';
 import React from 'react';
-import { MessageItem } from '../MessageItem/message-item.component';
-import { MessageListProps } from './message-list.props';
+import { MessageItem } from './MessageItem';
+
+export interface MessageListProps {
+  messages: Message[];
+  currentNickname: string;
+  isLoading: boolean;
+}
 
 export const MessageList = React.memo(
   ({ messages, currentNickname, isLoading }: MessageListProps) => {

@@ -1,14 +1,14 @@
 'use client';
 
-import { useChatSession } from '@/hooks/use-chat-session.hook';
-import { useSocket } from '@/hooks/use-socket.hook';
+import { useChatSession } from '@/hooks/useChatSession';
+import { useSocket } from '@/hooks/useSocket';
 import { Box } from '@mui/material';
 import { useCallback, useState } from 'react';
 
-import { ChatHeader } from '../ChatHeader/chat-header.component';
-import { LoginScreen } from '../LoginScreen/login-screen.component';
-import { MessageInput } from '../MessageInput/message-input.component';
-import { MessageList } from '../MessageList/message-list.component';
+import { ChatHeader } from './ChatHeader';
+import { LoginScreen } from './LoginScreen';
+import { MessageInput } from './MessageInput';
+import { MessageList } from './MessageList';
 
 const boxStyles = {
   display: 'flex',

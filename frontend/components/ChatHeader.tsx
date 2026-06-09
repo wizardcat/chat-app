@@ -1,7 +1,12 @@
 import LogoutIcon from '@mui/icons-material/Logout';
 import PeopleIcon from '@mui/icons-material/People';
 import { AppBar, Box, Chip, IconButton, Toolbar, Typography } from '@mui/material';
-import { ChatHeaderProps } from './chat-header.props';
+
+export interface ChatHeaderProps {
+  nickname: string;
+  onlineUsers: number;
+  onLogout: () => void;
+}
 
 const appBarStyles = {
   backgroundColor: 'background.paper',

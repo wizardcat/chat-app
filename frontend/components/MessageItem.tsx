@@ -1,9 +1,14 @@
 import { MAX_MESSAGE_WIDTH } from '@/config/api.config';
+import { Message } from '@/types';
 import { formatTimestamp } from '@/utils/format-timestamp';
 import { getAvatarUrl } from '@/utils/get-avatar-url';
 import { Avatar, Box, Paper, Theme, Typography } from '@mui/material';
 import React from 'react';
-import { MessageItemProps } from './message-item.props';
+
+export interface MessageItemProps {
+  message: Message;
+  isOwn: boolean;
+}
 
 const avatarStyles = {
   width: 32,
