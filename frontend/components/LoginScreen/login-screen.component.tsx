@@ -53,49 +53,51 @@ export const LoginScreen = ({ onLogin }: LoginScreenProps) => {
   };
 
   return (
-    <Box sx={rootBoxStyles}>
-      <Container maxWidth="sm">
-        <Paper elevation={10} sx={paperStyles}>
-          <Box textAlign="center" mb={4}>
-            <Avatar sx={avatarStyles}>
-              <PeopleIcon sx={{ fontSize: 40 }} />
-            </Avatar>
+    <>
+      <Box sx={rootBoxStyles}>
+        <Container maxWidth="sm">
+          <Paper elevation={10} sx={paperStyles}>
+            <Box textAlign="center" mb={4}>
+              <Avatar sx={avatarStyles}>
+                <PeopleIcon sx={{ fontSize: 40 }} />
+              </Avatar>
 
-            <Typography variant="h5" fontWeight={600}>
-              Welcome to the chat!
-            </Typography>
+              <Typography variant="h5" fontWeight={600}>
+                Welcome to the chat!
+              </Typography>
 
-            <Typography variant="body2" color="text.secondary" mt={1}>
-              Enter your nickname to join the conversation
-            </Typography>
-          </Box>
+              <Typography variant="body2" color="text.secondary" mt={1}>
+                Enter your nickname to join the conversation
+              </Typography>
+            </Box>
 
-          <TextField
-            fullWidth
-            placeholder="Your nickname"
-            value={nickname}
-            onChange={handleNicknameChange}
-            onKeyUp={handleNicknameKeyUp}
-            slotProps={{
-              input: {
-                inputProps: { maxLength: MAX_NICKNAME_LENGTH },
-              },
-            }}
-            sx={textFieldStyles}
-          />
+            <TextField
+              fullWidth
+              placeholder="Your nickname"
+              value={nickname}
+              onChange={handleNicknameChange}
+              onKeyUp={handleNicknameKeyUp}
+              slotProps={{
+                input: {
+                  inputProps: { maxLength: MAX_NICKNAME_LENGTH },
+                },
+              }}
+              sx={textFieldStyles}
+            />
 
-          <Button
-            fullWidth
-            size="large"
-            variant="contained"
-            disabled={!nickname.trim()}
-            onClick={handleLoginClick}
-            sx={buttonStyles}
-          >
-            Join Chat Room
-          </Button>
-        </Paper>
-      </Container>
-    </Box>
+            <Button
+              fullWidth
+              size="large"
+              variant="contained"
+              disabled={!nickname.trim()}
+              onClick={handleLoginClick}
+              sx={buttonStyles}
+            >
+              Join Chat Room
+            </Button>
+          </Paper>
+        </Container>
+      </Box>
+    </>
   );
 };
