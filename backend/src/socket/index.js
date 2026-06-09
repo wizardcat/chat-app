@@ -5,6 +5,7 @@ import { MessageService } from '../modules/messages/message.service.js';
 import { UserService } from '../modules/users/user.service.js';
 import { logger } from '../utils/logger.js';
 import { joinSchema, sendMessageSchema } from '../validation/socket.schemas.js';
+import { validate } from '../validation/socket.validator.js';
 
 export const initializeSocketIO = httpServer => {
   if (!models.User) {
@@ -27,9 +28,9 @@ export const initializeSocketIO = httpServer => {
     socket.on(SOCKET_EVENTS.DISCONNECT, async () => {
       try {
         await userService.deleteUserBySocketId(socket.id);
-        
+
         const onlineCount = await userService.getOnlineUsersCount();
-        
+
         io.emit(SOCKET_EVENTS.USERS.COUNT, onlineCount);
 
         logger.info('User disconnected', { socketId: socket.id });
@@ -39,16 +40,10 @@ export const initializeSocketIO = httpServer => {
     });
 
     socket.on(SOCKET_EVENTS.USERS.JOIN, async payload => {
-      const parsed = joinSchema.safeParse(payload);
-      
-      if (!parsed.success) {
-        socket.emit('error', { message: 'Invalid nickname' });
-        return;
-      }
-
-      const nickname = parsed.data;
-
       try {
+        const parsed = validate(joinSchema, payload);
+        const nickname = parsed;
+
         await userService.createUser(nickname, socket.id);
         socket.data.nickname = nickname;
 
@@ -61,6 +56,7 @@ export const initializeSocketIO = httpServer => {
         logger.info('User joined', { nickname });
       } catch (error) {
         logger.error('Error on user join', error);
+        socket.emit('error', { message: error.message });
       }
     });
 
